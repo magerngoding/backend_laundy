@@ -18,4 +18,41 @@ class ShopController extends Controller
 
         ], 200);
     }
+
+    function readReccommendationLimit()
+    {
+        // orderBy - query database
+        $shops = Shop::orderBy('rate', 'desc')
+            ->limit(5)
+            ->get();
+
+        if (count($shops) > 0) {
+            return response()->json([
+                'data' => $shops,
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'not found',
+                'data' => $shops,
+            ], 404);
+        }
+    }
+
+    function searchByCity($name)
+    {
+        $shops = Shop::where('city', 'like', '%' . $name . '%')
+            ->orderBy('name')
+            ->get();
+
+        if (count($shops) > 0) {
+            return response()->json([
+                'data' => $shops,
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'not found',
+                'data' => $shops,
+            ], 404);
+        }
+    }
 }
