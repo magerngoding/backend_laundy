@@ -5,6 +5,9 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -16,6 +19,51 @@ class UserController extends Controller
         return response()->json([
             'data' => $users,
 
+        ], 200);
+    }
+
+    function register(Request $request)
+    {
+        // Validasi
+        $validator = Validator::make($request, [
+            'username' => 'required|min:4|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8',
+        ]);
+
+        // Jika validasi gagal
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // True -> User::create() menyimpan data ke database table user setelah validasi berhasil.
+        $user = User::create([
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->username),
+        ]);
+
+        return response()->json([
+            'data' => $user,
+        ], 201);
+    }
+
+    function login(Request $request)
+    {
+        // jika proses login gagal
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        $user = User::where('email', $request->email)->firstOrFail();
+
+        $token =  $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'data' => $user,
+            'token' => $token,
         ], 200);
     }
 }

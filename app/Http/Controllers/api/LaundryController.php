@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class LaundryController extends Controller
 {
-    // Real all semua data table
+    // Real all semua data table & mix include table user & shop
     function readAll()
     {
         $laundries = Laundry::with('user', 'shop')->get();
