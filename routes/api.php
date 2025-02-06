@@ -23,7 +23,7 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 
 
-// BUTUH TOKEN
+// BUTUH TOKEN YANG DI DAPAT DAR LOGIN 
 Route::middleware('auth:sanctum')->group(function () {
     // laundry
     Route::get('/laundry/user/{id}', [LaundryController::class, 'whereUserId']);
@@ -35,5 +35,5 @@ Route::middleware('auth:sanctum')->group(function () {
     // shop
     Route::get('/shop/reccommmendation/limit', [ShopController::class, 'readReccommendationLimit']);
     // {parameter di controller}
-    Route::get('/shop/search/{name}', [ShopController::class, 'searchByCity']);
+    Route::get('/shop/search/city/{name}', [ShopController::class, 'searchByCity']);
 });

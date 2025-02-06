@@ -55,10 +55,11 @@ class LaundryController extends Controller
         if ($laundry->user_id != 0) {
             return response()->json([
                 'message' => 'laundry has been claimed',
-            ], 40);
+            ], 404);
         }
 
         $laundry->user_id = $request->user_id;
+
         $updated = $laundry->save();
 
         if ($updated) {
