@@ -7,10 +7,12 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class UserController extends Controller
 {
+    use ValidatesRequests;
+
     // Real all semua data table
     function readAll()
     {
@@ -24,11 +26,11 @@ class UserController extends Controller
 
     function register(Request $request)
     {
-        // $this->validate($request, [
-        //     'username' => 'required|min:4|unique:users',
-        //     'email' => 'required|email|unique:users',
-        //     'password' => 'required|min:8',
-        // ]);
+        $this->validate($request, [
+            'username' => 'required|min:4|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8',
+        ]);
 
         // User::create() menyimpan data ke database table user setelah validasi berhasil.
         $user = User::create([
